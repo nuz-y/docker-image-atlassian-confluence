@@ -6,7 +6,7 @@
 
 | Product |Version | Tags  | Dockerfile |
 |---------|--------|-------|------------|
-| Confluence | [see tags]() | [see tags]() | [Dockerfile](https://github.com/docker-image-atlassian-confluence/blob/master/Dockerfile) |
+| Confluence | 5.7.x-6.x(latest) | [see tags](https://hub.docker.com/r/eugenmayer/confluence/tags/) | [Dockerfile](https://github.com/docker-image-atlassian-confluence/blob/master/Dockerfile) |
 
 ## Related Images
 
