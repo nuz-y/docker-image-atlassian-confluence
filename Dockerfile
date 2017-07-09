@@ -85,6 +85,6 @@ USER confluence
 VOLUME ["/var/atlassian/confluence"]
 # Set the default working directory as the Confluence home directory.
 WORKDIR ${CONF_HOME}
-COPY docker-entrypoint.sh /home/confluence/docker-entrypoint.sh
+COPY bin/docker-entrypoint.sh /home/confluence/docker-entrypoint.sh
 ENTRYPOINT ["/bin/tini","--","/home/confluence/docker-entrypoint.sh"]
 CMD ["confluence"]

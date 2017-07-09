@@ -1,28 +1,23 @@
 # Dockerized Atlassian Confluence
 
-[![Circle CI](https://circleci.com/gh/blacklabelops/confluence/tree/master.svg?style=shield)](https://circleci.com/gh/blacklabelops/confluence/tree/master)
-
 "One place for all your team's work - Spend less time hunting things down and more time making things happen. Organize your work, create documents, and discuss everything in one place." - [[Source](https://www.atlassian.com/software/confluence)]
 
 ## Supported tags and respective Dockerfile links
 
 | Product |Version | Tags  | Dockerfile |
 |---------|--------|-------|------------|
-| Confluence | 6.2.2 | 6.2.2, latest | [Dockerfile](https://github.com/blacklabelops/confluence/blob/master/Dockerfile) |
+| Confluence | [see tags]() | [see tags]() | [Dockerfile](https://github.com/docker-image-atlassian-confluence/blob/master/Dockerfile) |
 
 ## Related Images
 
 You may also like:
 
-* [blacklabelops/jira](https://github.com/blacklabelops/jira): The #1 software development tool used by agile teams
-* [blacklabelops/confluence](https://github.com/blacklabelops/confluence): Create, organize, and discuss work with your team
-* [blacklabelops/bitbucket](https://github.com/blacklabelops/bitbucket): Code, Manage, Collaborate
-* [blacklabelops/crowd](https://github.com/blacklabelops/crowd): Identity management for web apps
+* [jira](https://github.com/EugenMayer/docker-image-atlassian-jira)
 
 # Make It Short
 
 ~~~~
-$ docker run -d -p 80:8090 -p 8091:8091 --name confluence blacklabelops/confluence
+$ docker run -d -p 80:8090 -p 8091:8091 --name confluence docker-image-atlassian-confluence
 ~~~~
 
 # Setup
@@ -52,7 +47,7 @@ Secondly start Confluence with a link to postgres:
 ~~~~
 $ docker run -d --name confluence \
 	  --link postgres:postgres \
-	  -p 80:8090 -p 8091:8091 blacklabelops/confluence
+	  -p 80:8090 -p 8091:8091 docker-image-atlassian-confluence
 ~~~~
 
 >  Start the Confluence and link it to the postgresql instance.
@@ -127,7 +122,7 @@ Now start the Confluence container and let it use the container. On first startu
 ~~~~
 $ docker run -d --name confluence \
 	  --link postgres:postgres \
-	  -p 80:8090 -p 8091:8091 blacklabelops/confluence
+	  -p 80:8090 -p 8091:8091 docker-image-atlassian-confluence
 ~~~~
 
 >  Start the Confluence and link it to the postgresql instance.
@@ -177,7 +172,7 @@ Now start the Confluence container and let it use the container. On first startu
 ~~~~
 $ docker run -d --name confluence \
 	  --link mysql:mysql \
-	  -p 80:8090 -p 8091:8091 blacklabelops/confluence
+	  -p 80:8090 -p 8091:8091 docker-image-atlassian-confluence
 ~~~~
 
 >  Start the Confluence and link it to the postgresql instance.
@@ -205,7 +200,7 @@ $ docker run -d --name confluence \
     -e "CONFLUENCE_PROXY_NAME=myhost.example.com" \
     -e "CONFLUENCE_PROXY_PORT=443" \
     -e "CONFLUENCE_PROXY_SCHEME=https" \
-    blacklabelops/confluence
+    docker-image-atlassian-confluence
 ~~~~
 
 > Will set the values inside the server.xml in /opt/confluence/conf/server.xml
@@ -241,7 +236,7 @@ $ docker run -d --name confluence \
     -e "CONFLUENCE_PROXY_NAME=confluence.yourhost.com" \
     -e "CONFLUENCE_PROXY_PORT=80" \
     -e "CONFLUENCE_PROXY_SCHEME=http" \
-    blacklabelops/confluence
+    docker-image-atlassian-confluence
 ~~~~
 
 Then start NGINX:
@@ -272,7 +267,7 @@ $ docker run -d \
     -e "CONFLUENCE_PROXY_NAME=confluence.yourhost.com" \
     -e "CONFLUENCE_PROXY_PORT=80" \
     -e "CONFLUENCE_PROXY_SCHEME=http" \
-    blacklabelops/confluence
+    docker-image-atlassian-confluence
 ~~~~
 
 Then start NGINX:
@@ -320,7 +315,7 @@ $ docker run -d --name confluence \
     -e "CONFLUENCE_PROXY_NAME=confluence.yourhost.com" \
     -e "CONFLUENCE_PROXY_PORT=443" \
     -e "CONFLUENCE_PROXY_SCHEME=https" \
-    blacklabelops/confluence
+    docker-image-atlassian-confluence
 ~~~~
 
 Then start NGINX:
@@ -352,7 +347,7 @@ Examples:
 Build image with the default Confluence release:
 
 ~~~~
-$ docker build -t blacklabelops/confluence .
+$ docker build -t docker-image-atlassian-confluence .
 ~~~~
 
 > Note: Dockerfile must be inside the current directory!
@@ -360,7 +355,7 @@ $ docker build -t blacklabelops/confluence .
 Build image with a specific Confluence release:
 
 ~~~~
-$ docker build --build-arg CONFLUENCE_VERSION=6.0.2  -t blacklabelops/confluence .
+$ docker build --build-arg CONFLUENCE_VERSION=6.0.2  -t docker-image-atlassian-confluence .
 ~~~~
 
 > Note: Dockerfile must be inside the current directory!
@@ -402,7 +397,7 @@ The following build arguments can be used:
 Example:
 
 ~~~~
-$ docker build --build-arg CONTAINER_UID=2000 --build-arg CONTAINER_GID=2000 -t blacklabelops/confluence .
+$ docker build --build-arg CONTAINER_UID=2000 --build-arg CONTAINER_GID=2000 -t docker-image-atlassian-confluence .
 ~~~~
 
 > The container will write and read files with UID 2000 and GID 2000.
@@ -430,16 +425,15 @@ $ vagrant ssh
 Confluence like any Java application needs a huge amount of memory. If you limit the memory usage by using the Docker --mem option make sure that you give enough memory. Otherwise your Confluence will begin to restart randomly.
 You should give at least 1-2GB more than the JVM maximum memory setting to your container.
 
-# Support & Feature Requests
+# Contributions
 
-Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](http://support.blacklabelops.com)
+I am happy to take on pull requests and suggestion, but will try to keep the image as dry as possible. 
 
 # Credits
 
-This project is very grateful for code and examples from the repositories:
+This repo and project is based on the great work of
 
-* [atlassianlabs/atlassian-docker](https://bitbucket.org/atlassianlabs/atlassian-docker)
-* [cptactionhank/docker-atlassian-confluence](https://github.com/cptactionhank/docker-atlassian-confluence)
+[blacklabelops/jira](https://bitbucket.org/blacklabelops/confluence)
 
 ## References
 * [Atlassian Confluence](https://www.atlassian.com/software/confluence)

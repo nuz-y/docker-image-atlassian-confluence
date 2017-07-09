@@ -2,11 +2,8 @@ version: '2'
 
 services:
   confluence:
-    image: blacklabelops/confluence
+    image: eugenmayer/confluence
     container_name: confluence
-    hostname: confluence
-    networks:
-      - confluencenet
     volumes:
       - confluencedata:/var/atlassian/confluence
     ports:
@@ -18,16 +15,10 @@ services:
       - 'CONFLUENCE_PROXY_PORT='
       - 'CONFLUENCE_PROXY_SCHEME='
       - 'CONFLUENCE_DELAYED_START='
-    labels:
-      com.blacklabelops.description: "Atlassian Confluence"
-      com.blacklabelops.service: "confluence"
 
   postgresql:
     image: blacklabelops/postgres
     container_name: postgres
-    hostname: postgres
-    networks:
-      - confluencenet
     volumes:
       - postgresqldata:/var/lib/postgresql/data
     environment:
@@ -38,16 +29,9 @@ services:
       - 'POSTGRES_ENCODING=UTF8'
       - 'POSTGRES_COLLATE=C'
       - 'POSTGRES_COLLATE_TYPE=C'
-    labels:
-      com.blacklabelops.description: "PostgreSQL Database Server"
-      com.blacklabelops.service: "postgresql"
 
 volumes:
   confluencedata:
     external: false
   postgresqldata:
     external: false
-
-networks:
-  confluencenet:
-    driver: bridge
