@@ -17,4 +17,5 @@ git add .env
 git add Dockerfile
 git commit -am "releasing $version"
 git tag $version
-git push && git push --tags
+git push
+git push --tags
