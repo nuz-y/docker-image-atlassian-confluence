@@ -2,7 +2,9 @@ version: '2'
 
 services:
   confluence:
-    image: eugenmayer/confluence
+    image: eugenmayer/confluence:${CONFLUENCE_VERSION}
+    build:
+      context: ./
     container_name: confluence
     volumes:
       - confluencedata:/var/atlassian/confluence

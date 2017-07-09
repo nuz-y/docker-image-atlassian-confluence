@@ -11,8 +11,7 @@ fi
 echo "injection version: $version"
 sed -i ''  "s/CONFLUENCE_VERSION=.*/CONFLUENCE_VERSION=$version/g" .env
 sed -i ''  "s/ARG CONFLUENCE_VERSION=.*/ARG CONFLUENCE_VERSION=$version/g" Dockerfile
-cp Dockerfile Dockerfile_de
-
+exit
 echo "tagging with $version"
 git add .env
 git add Dockerfile
