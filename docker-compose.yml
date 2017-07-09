@@ -5,6 +5,8 @@ services:
     image: eugenmayer/confluence:${CONFLUENCE_VERSION}
     build:
       context: ./
+      args:
+        CONFLUENCE_VERSION: ${CONFLUENCE_VERSION}
     container_name: confluence
     volumes:
       - confluencedata:/var/atlassian/confluence

@@ -1,4 +1,4 @@
-# Dockerized Atlassian Confluence
+# Atlassian Confluence the Docker way
 
 "One place for all your team's work - Spend less time hunting things down and more time making things happen. Organize your work, create documents, and discuss everything in one place." - [[Source](https://www.atlassian.com/software/confluence)]
 
@@ -17,7 +17,7 @@ You may also like:
 # Make It Short
 
 ~~~~
-$ docker run -d -p 80:8090 -p 8091:8091 --name confluence docker-image-atlassian-confluence
+docker-compose up
 ~~~~
 
 # Setup
@@ -31,7 +31,7 @@ First start the database server:
 > Note: Change Password!
 
 ~~~~
-$ docker run --name postgres -d \
+docker run --name postgres -d \
     -e 'POSTGRES_USER=jira' \
     -e 'POSTGRES_PASSWORD=jellyfish' \
     -e 'POSTGRES_ENCODING=UTF8' \
@@ -45,7 +45,7 @@ $ docker run --name postgres -d \
 Secondly start Confluence with a link to postgres:
 
 ~~~~
-$ docker run -d --name confluence \
+docker run -d --name confluence \
 	  --link postgres:postgres \
 	  -p 80:8090 -p 8091:8091 docker-image-atlassian-confluence
 ~~~~
@@ -67,17 +67,6 @@ Thirdly, configure your Confluence yourself and fill it with a test license.
 
 > Note: Change Password!
 
-# Demo Database Setup
-
-> Note: It's not recommended to use a default initialized database for Confluence in production! The default databases are all using a not recommended database configuration! Please use this for demo purposes only!
-
-This is a demo "by foot" using the docker cli. In this example we setup an empty PostgreSQL container. Then we connect and configure the Confluence accordingly. Afterwards the Confluence container can always resume on the database.
-
-Steps:
-
-* Start Database container
-* Start Confluence
-
 ## PostgreSQL
 
 Let's take an PostgreSQL Docker Image and set it up:
@@ -85,7 +74,7 @@ Let's take an PostgreSQL Docker Image and set it up:
 Postgres Official Docker Image:
 
 ~~~~
-$ docker run --name postgres -d \
+docker run --name postgres -d \
     -e 'POSTGRES_DB=confluencedb' \
     -e 'POSTGRES_USER=confluencedb' \
     -e 'POSTGRES_PASSWORD=jellyfish' \
@@ -97,7 +86,7 @@ $ docker run --name postgres -d \
 Postgres Community Docker Image:
 
 ~~~~
-$ docker run --name postgres -d \
+docker run --name postgres -d \
     -e 'DB_USER=confluencedb' \
     -e 'DB_PASS=jellyfish' \
     -e 'DB_NAME=confluencedb' \
@@ -120,7 +109,7 @@ Now start the Confluence container and let it use the container. On first startu
 * Password: `jellyfish`
 
 ~~~~
-$ docker run -d --name confluence \
+docker run -d --name confluence \
 	  --link postgres:postgres \
 	  -p 80:8090 -p 8091:8091 docker-image-atlassian-confluence
 ~~~~
@@ -134,7 +123,7 @@ Let's take an MySQL container and set it up:
 MySQL Official Docker Image:
 
 ~~~~
-$ docker run -d --name mysql \
+docker run -d --name mysql \
     -e 'MYSQL_ROOT_PASSWORD=verybigsecretrootpassword' \
     -e 'MYSQL_DATABASE=confluencedb' \
     -e 'MYSQL_USER=confluencedb' \
@@ -147,7 +136,7 @@ $ docker run -d --name mysql \
 MySQL Community Docker Image:
 
 ~~~~
-$ docker run -d --name mysql \
+docker run -d --name mysql \
     -e 'ON_CREATE_DB=confluencedb' \
     -e 'MYSQL_USER=confluencedb' \
     -e 'MYSQL_PASS=jellyfish' \
@@ -170,7 +159,7 @@ Now start the Confluence container and let it use the container. On first startu
 * Password: `jellyfish`
 
 ~~~~
-$ docker run -d --name confluence \
+docker run -d --name confluence \
 	  --link mysql:mysql \
 	  -p 80:8090 -p 8091:8091 docker-image-atlassian-confluence
 ~~~~
@@ -196,7 +185,7 @@ Example HTTPS:
 Just type:
 
 ~~~~
-$ docker run -d --name confluence \
+docker run -d --name confluence \
     -e "CONFLUENCE_PROXY_NAME=myhost.example.com" \
     -e "CONFLUENCE_PROXY_PORT=443" \
     -e "CONFLUENCE_PROXY_SCHEME=https" \
@@ -205,181 +194,20 @@ $ docker run -d --name confluence \
 
 > Will set the values inside the server.xml in /opt/confluence/conf/server.xml
 
-# NGINX HTTP Proxy
-
-This is an example on running Atlassian Confluence behind NGINX with 2 Docker commands!
-
-Prerequisite:
-
-If you want to try the stack on your local compute then setup the following domains in your host settings (Mac/Linux: /etc/hosts):
-
-~~~~
-127.0.0.1	confluence.yourhost.com
-~~~~
-
-Then create a Docker network for communication between Confluence and Nginx:
-
-~~~~
-$ docker network create confluence
-~~~~
-
-## Confluence 6
-
-First start Confluence:
-
-~~~~
-$ docker run -d --name confluence \
-	  --hostname confluence \
-	  --network confluence \
-	  -v confluencedata:/var/atlassian/confluence \
-	  -e "CONFLUENCE_CONTEXT_PATH=/confluence" \
-    -e "CONFLUENCE_PROXY_NAME=confluence.yourhost.com" \
-    -e "CONFLUENCE_PROXY_PORT=80" \
-    -e "CONFLUENCE_PROXY_SCHEME=http" \
-    docker-image-atlassian-confluence
-~~~~
-
-Then start NGINX:
-
-~~~~
-$ docker run -d \
-    -p 80:80 \
-    --name nginx \
-    --network confluence \
-    -e "SERVER1SERVER_NAME=confluence.yourhost.com" \
-    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://confluence:8090" \
-    -e "SERVER1REVERSE_PROXY_APPLICATION1=confluence" \
-    blacklabelops/nginx
-~~~~
-
-> Confluence will be available at http://confluence.yourhost.com.
-
-## Confluence 5
-
-First start Confluence:
-
-~~~~
-$ docker run -d \
-    --name confluence \
-    --hostname confluence \
-	  --network confluence \
-    -e "CONFLUENCE_PROXY_NAME=confluence.yourhost.com" \
-    -e "CONFLUENCE_PROXY_PORT=80" \
-    -e "CONFLUENCE_PROXY_SCHEME=http" \
-    docker-image-atlassian-confluence
-~~~~
-
-Then start NGINX:
-
-~~~~
-$ docker run -d \
-    -p 80:80 \
-    --name nginx \
-    --network confluence \
-    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://confluence:8090" \
-    blacklabelops/nginx
-~~~~
-
-> Confluence will be available at http://confluence.yourhost.com.
-
-# NGINX HTTPS Proxy
-
-This is an example on running Atlassian Confluence behind NGINX with 2 Docker commands!
-
-Note: This is a self-signed certificate! Trusted certificates by letsencrypt are supported. Documentation can be found here: [blacklabelops/nginx](https://github.com/blacklabelops/nginx)
-
-Prerequisite:
-
-If you want to try the stack on your local compute then setup the following domains in your host settings (Mac/Linux: /etc/hosts):
-
-~~~~
-127.0.0.1	confluence.yourhost.com
-~~~~
-
-Then create a Docker network for communication between Confluence and Nginx:
-
-~~~~
-$ docker network create confluence
-~~~~
-
-## Confluence 5
-
-First start Confluence:
-
-~~~~
-$ docker run -d --name confluence \
-    --hostname confluence \
-    --network confluence \
-    -e "CONFLUENCE_PROXY_NAME=confluence.yourhost.com" \
-    -e "CONFLUENCE_PROXY_PORT=443" \
-    -e "CONFLUENCE_PROXY_SCHEME=https" \
-    docker-image-atlassian-confluence
-~~~~
-
-Then start NGINX:
-
-~~~~
-$ docker run -d \
-    -p 443:443 \
-    --name nginx \
-    --network confluence \
-    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://confluence:8090" \
-    -e "SERVER1REVERSE_PROXY_APPLICATION1=confluence" \
-    -e "SERVER1CERTIFICATE_DNAME=/CN=CrustyClown/OU=SpringfieldEntertainment/O=confluence.yourhost.com/L=Springfield/C=US" \
-    -e "SERVER1HTTPS_ENABLED=true" \
-    -e "SERVER1HTTP_ENABLED=false" \
-    blacklabelops/nginx
-~~~~
-
-> Confluence will be available at https://confluence.yourhost.com.
-
 # Build The Image
 
-The build process can take the following argument:
+Build image with the curent Confluence release:
 
-* CONFLUENCE_VERSION: The specific Confluence version number.
+```
+docker-compose build confluence
+```
 
-Examples:
 
-Build image with the default Confluence release:
+If you want to build a specific release, just replace the version in .env and again run
 
-~~~~
-$ docker build -t docker-image-atlassian-confluence .
-~~~~
-
-> Note: Dockerfile must be inside the current directory!
-
-Build image with a specific Confluence release:
-
-~~~~
-$ docker build --build-arg CONFLUENCE_VERSION=6.0.2  -t docker-image-atlassian-confluence .
-~~~~
-
-> Note: Dockerfile must be inside the current directory!
-
-# Using Docker Compose
-
-The build configuration are specified inside the following area:
-
-~~~~
-jenkins:
-  build:
-    context: .
-    dockerfile: Dockerfile
-    args:
-      CONFLUENCE_VERSION: 6.0.2
-~~~~
-
-> Adjust CONFLUENCE_VERSION for your personal needs.
-
-Build the latest release with docker-compose:
-
-~~~~
-$ docker-compose build
-~~~~
+```
+docker-compose build confluence
+```
 
 # Container Permissions
 
@@ -397,28 +225,10 @@ The following build arguments can be used:
 Example:
 
 ~~~~
-$ docker build --build-arg CONTAINER_UID=2000 --build-arg CONTAINER_GID=2000 -t docker-image-atlassian-confluence .
+docker build --build-arg CONTAINER_UID=2000 --build-arg CONTAINER_GID=2000 -t docker-image-atlassian-confluence .
 ~~~~
 
 > The container will write and read files with UID 2000 and GID 2000.
-
-# Vagrant
-
-First install:
-
-* [Vagrant](https://www.vagrantup.com/)
-* [Virtualbox](https://www.virtualbox.org/)
-
-Vagrant is fabulous tool for pulling and spinning up virtual machines like docker with containers. I can configure my development and test environment and simply pull it online. And so can you! Install Vagrant and Virtualbox and spin it up. Change into the project folder and build the project on the spot!
-
-~~~~
-$ vagrant up
-$ vagrant ssh
-[vagrant@localhost ~]$ cd /vagrant
-[vagrant@localhost ~]$ docker-compose up
-~~~~
-
-> Confluence will be available on localhost:8080 on the host machine.
 
 # A word about memory usage
 
@@ -433,7 +243,7 @@ I am happy to take on pull requests and suggestion, but will try to keep the ima
 
 This repo and project is based on the great work of
 
-[blacklabelops/jira](https://bitbucket.org/blacklabelops/confluence)
+[blacklabelops/confluence](https://bitbucket.org/blacklabelops/confluence)
 
 ## References
 * [Atlassian Confluence](https://www.atlassian.com/software/confluence)
