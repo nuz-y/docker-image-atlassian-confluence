@@ -255,87 +255,6 @@ $ docker run -d \
 
 > Confluence will be available at http://confluence.yourhost.com.
 
-## Confluence 5
-
-First start Confluence:
-
-~~~~
-$ docker run -d \
-    --name confluence \
-    --hostname confluence \
-	  --network confluence \
-    -e "CONFLUENCE_PROXY_NAME=confluence.yourhost.com" \
-    -e "CONFLUENCE_PROXY_PORT=80" \
-    -e "CONFLUENCE_PROXY_SCHEME=http" \
-    docker-image-atlassian-confluence
-~~~~
-
-Then start NGINX:
-
-~~~~
-$ docker run -d \
-    -p 80:80 \
-    --name nginx \
-    --network confluence \
-    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://confluence:8090" \
-    blacklabelops/nginx
-~~~~
-
-> Confluence will be available at http://confluence.yourhost.com.
-
-# NGINX HTTPS Proxy
-
-This is an example on running Atlassian Confluence behind NGINX with 2 Docker commands!
-
-Note: This is a self-signed certificate! Trusted certificates by letsencrypt are supported. Documentation can be found here: [blacklabelops/nginx](https://github.com/blacklabelops/nginx)
-
-Prerequisite:
-
-If you want to try the stack on your local compute then setup the following domains in your host settings (Mac/Linux: /etc/hosts):
-
-~~~~
-127.0.0.1	confluence.yourhost.com
-~~~~
-
-Then create a Docker network for communication between Confluence and Nginx:
-
-~~~~
-$ docker network create confluence
-~~~~
-
-## Confluence 5
-
-First start Confluence:
-
-~~~~
-$ docker run -d --name confluence \
-    --hostname confluence \
-    --network confluence \
-    -e "CONFLUENCE_PROXY_NAME=confluence.yourhost.com" \
-    -e "CONFLUENCE_PROXY_PORT=443" \
-    -e "CONFLUENCE_PROXY_SCHEME=https" \
-    docker-image-atlassian-confluence
-~~~~
-
-Then start NGINX:
-
-~~~~
-$ docker run -d \
-    -p 443:443 \
-    --name nginx \
-    --network confluence \
-    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://confluence:8090" \
-    -e "SERVER1REVERSE_PROXY_APPLICATION1=confluence" \
-    -e "SERVER1CERTIFICATE_DNAME=/CN=CrustyClown/OU=SpringfieldEntertainment/O=confluence.yourhost.com/L=Springfield/C=US" \
-    -e "SERVER1HTTPS_ENABLED=true" \
-    -e "SERVER1HTTP_ENABLED=false" \
-    blacklabelops/nginx
-~~~~
-
-> Confluence will be available at https://confluence.yourhost.com.
-
 # Build The Image
 
 The build process can take the following argument:
@@ -401,29 +320,6 @@ $ docker build --build-arg CONTAINER_UID=2000 --build-arg CONTAINER_GID=2000 -t 
 ~~~~
 
 > The container will write and read files with UID 2000 and GID 2000.
-
-# Vagrant
-
-First install:
-
-* [Vagrant](https://www.vagrantup.com/)
-* [Virtualbox](https://www.virtualbox.org/)
-
-Vagrant is fabulous tool for pulling and spinning up virtual machines like docker with containers. I can configure my development and test environment and simply pull it online. And so can you! Install Vagrant and Virtualbox and spin it up. Change into the project folder and build the project on the spot!
-
-~~~~
-$ vagrant up
-$ vagrant ssh
-[vagrant@localhost ~]$ cd /vagrant
-[vagrant@localhost ~]$ docker-compose up
-~~~~
-
-> Confluence will be available on localhost:8080 on the host machine.
-
-# A word about memory usage
-
-Confluence like any Java application needs a huge amount of memory. If you limit the memory usage by using the Docker --mem option make sure that you give enough memory. Otherwise your Confluence will begin to restart randomly.
-You should give at least 1-2GB more than the JVM maximum memory setting to your container.
 
 # Contributions
 
