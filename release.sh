@@ -9,8 +9,8 @@ if [ $# -eq 0 ]
 fi
 
 echo "injection version: $version"
-sed -i ''  "s/CONFLUENCE_VERSION=.*/CONFLUENCE_VERSION=$version/g" .env
-sed -i ''  "s/ARG CONFLUENCE_VERSION=.*/ARG CONFLUENCE_VERSION=$version/g" Dockerfile
+sed -i "s/CONFLUENCE_VERSION=.*/CONFLUENCE_VERSION=$version/g" .env
+sed -i "s/ARG CONFLUENCE_VERSION=.*/ARG CONFLUENCE_VERSION=$version/g" Dockerfile
 
 echo "tagging with $version"
 git add .env
