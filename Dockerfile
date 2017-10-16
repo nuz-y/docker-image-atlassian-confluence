@@ -8,7 +8,7 @@ ARG CONTAINER_GID=1000
 # Setup useful environment variables
 ENV CONF_HOME=/var/atlassian/confluence \
     CONF_INSTALL=/opt/atlassian/confluence \
-    MYSQL_DRIVER_VERSION=5.1.42 \
+    MYSQL_DRIVER_VERSION=5.1.44 \
     POSTGRESQL_DRIVER_VERSION=9.4.1212
 
 # Install Atlassian Confluence
@@ -26,12 +26,19 @@ RUN export CONTAINER_USER=confluence                &&  \
       gzip                                              \
       curl                                              \
       tar                                               \
+      msttcorefonts-installer                           \
+      ttf-dejavu					                    \
+      fontconfig                                        \
+      motif						                        \
+      ghostscript                                       \
+      graphviz                                          \
+      xmlstarlet                                        \
       wget                                          &&  \
     # Install xmlstarlet
-    export XMLSTARLET_VERSION=1.6.1-r1              &&  \
-    wget --directory-prefix=/tmp https://github.com/menski/alpine-pkg-xmlstarlet/releases/download/${XMLSTARLET_VERSION}/xmlstarlet-${XMLSTARLET_VERSION}.apk && \
-    apk add --allow-untrusted /tmp/xmlstarlet-${XMLSTARLET_VERSION}.apk && \
-    mkdir -p ${CONF_HOME} \
+    update-ms-fonts                                 && \
+    fc-cache -f                                     && \
+    /usr/glibc-compat/bin/localedef -i ${LANG_LANGUAGE}_${LANG_COUNTRY} -f UTF-8 ${LANG_LANGUAGE}_${LANG_COUNTRY}.UTF-8 && \
+    mkdir -p ${CONF_HOME} \    
     && chown -R confluence:confluence ${CONF_HOME} \
     && mkdir -p ${CONF_INSTALL}/conf \
     && wget -O /tmp/atlassian-confluence-${CONFLUENCE_VERSION}.tar.gz http://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-${CONFLUENCE_VERSION}.tar.gz && \
@@ -47,8 +54,8 @@ RUN export CONTAINER_USER=confluence                &&  \
     cp /tmp/mysql-connector-java-${MYSQL_DRIVER_VERSION}/mysql-connector-java-${MYSQL_DRIVER_VERSION}-bin.jar     \
       ${CONF_INSTALL}/lib/mysql-connector-java-${MYSQL_DRIVER_VERSION}-bin.jar                                &&  \
     rm -f ${CONF_INSTALL}/lib/postgresql-*.jar                                                                &&  \
-    wget -O ${CONF_INSTALL}/lib/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar                                       \
-      https://jdbc.postgresql.org/download/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar && \
+    wget -O ${CONF_INSTALL}/lib/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar                                        \
+      https://jdbc.postgresql.org/download/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar                          && \
     chown -R confluence:confluence ${CONF_INSTALL} && \
     # Adding letsencrypt-ca to truststore
     export KEYSTORE=$JAVA_HOME/lib/security/cacerts && \
