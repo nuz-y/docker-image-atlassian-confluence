@@ -1,9 +1,11 @@
-FROM blacklabelops/java:jre8
+FROM eugenmayer/java:server-jre8
 
 ARG CONFLUENCE_VERSION=6.5.0
 # permissions
 ARG CONTAINER_UID=1000
 ARG CONTAINER_GID=1000
+ARG LANG_LANGUAGE=en
+ARG LANG_COUNTRY=US
 
 # Setup useful environment variables
 ENV CONF_HOME=/var/atlassian/confluence \
