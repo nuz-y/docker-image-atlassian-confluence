@@ -79,6 +79,8 @@ if [ -n "${CONFLUENCE_LOGFILE_LOCATION}" ]; then
   relayConfluenceLogFiles
 fi
 
+/usr/local/bin/bootstrap.sh
+
 if [ "$1" = 'confluence' ]; then
   exec /opt/atlassian/confluence/bin/start-confluence.sh -fg
 else
