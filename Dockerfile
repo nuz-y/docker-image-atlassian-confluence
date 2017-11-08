@@ -13,7 +13,7 @@ ENV CONF_HOME=/var/atlassian/confluence \
     MYSQL_DRIVER_VERSION=5.1.44 \
     POSTGRESQL_DRIVER_VERSION=9.4.1212
 
-COPY bin/bootstrap.sh /usr/local/bin/bootstrap.sh
+COPY bin/custom_scripts.sh /usr/local/bin/custom_scripts.sh
 
 # Install Atlassian Confluence
 RUN export CONTAINER_USER=confluence                &&  \
@@ -89,7 +89,7 @@ RUN export CONTAINER_USER=confluence                &&  \
     rm -rf /tmp/*                                   &&  \
     rm -rf /var/log/* && \
     mkdir -p /docker-entrypoint.d && \
-    chmod +x /usr/local/bin/bootstrap.sh
+    chmod +x /usr/local/bin/custom_scripts.sh
 
 # Expose default HTTP connector port.
 EXPOSE 8090 8091
