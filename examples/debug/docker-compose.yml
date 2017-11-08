@@ -1,0 +1,19 @@
+jira:
+  image: eugenmayer/confluence
+  ports:
+    - '80:8080'
+    - '5005:5005'
+  environment:
+    - 'CONFLUENCE_DATABASE_URL=mysql://confluencedb@mysql/confluencedb'
+    - 'CONFLUENCE_DB_PASSWORD=jellyfish'
+    - 'JPDA_ADDRESS=5005'
+    - 'JPDA_TRANSPORT=dt_socket'
+  volumes:
+    - './start-confluence.sh:/opt/atlassian/confluence/bin/start-confluence.sh'
+mysql:
+  image: mysql:5.6
+  environment:
+    - 'MYSQL_ROOT_PASSWORD=verybigsecretrootpassword'
+    - 'MYSQL_DATABASE=confluencedb'
+    - 'MYSQL_USER=confluencedb'
+    - 'MYSQL_PASSWORD=jellyfish'

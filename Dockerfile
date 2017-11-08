@@ -13,6 +13,8 @@ ENV CONF_HOME=/var/atlassian/confluence \
     MYSQL_DRIVER_VERSION=5.1.44 \
     POSTGRESQL_DRIVER_VERSION=9.4.1212
 
+COPY bin/custom_scripts.sh /usr/local/bin/custom_scripts.sh
+
 # Install Atlassian Confluence
 RUN export CONTAINER_USER=confluence                &&  \
     export CONTAINER_GROUP=confluence               &&  \
@@ -86,7 +88,9 @@ RUN export CONTAINER_USER=confluence                &&  \
     # Clean caches and tmps
     rm -rf /var/cache/apk/*                         &&  \
     rm -rf /tmp/*                                   &&  \
-    rm -rf /var/log/*
+    rm -rf /var/log/* && \
+    mkdir -p /docker-entrypoint.d && \
+    chmod +x /usr/local/bin/custom_scripts.sh
 
 # Expose default HTTP connector port.
 EXPOSE 8090 8091
@@ -96,5 +100,6 @@ VOLUME ["/var/atlassian/confluence"]
 # Set the default working directory as the Confluence home directory.
 WORKDIR ${CONF_HOME}
 COPY bin/docker-entrypoint.sh /home/confluence/docker-entrypoint.sh
+
 ENTRYPOINT ["/bin/tini","--","/home/confluence/docker-entrypoint.sh"]
 CMD ["confluence"]
