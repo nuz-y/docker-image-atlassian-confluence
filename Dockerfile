@@ -35,6 +35,7 @@ RUN export CONTAINER_USER=confluence                &&  \
       ghostscript                                       \
       graphviz                                          \
       xmlstarlet                                        \
+      bash	                                        \
       wget                                          &&  \
     # Install xmlstarlet
     update-ms-fonts                                 && \
