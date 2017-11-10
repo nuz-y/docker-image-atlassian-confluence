@@ -89,7 +89,7 @@ function processConfluenceConfigurationSettings() {
       if [ -z "${!VAR_CONFLUENCE_CONFIG_PROPERTY}" ]; then
         break
       fi
-      setConfluenceConfigurationProperty ${!VAR_CONFLUENCE_CONFIG_PROPERTY} ${!VAR_CONFLUENCE_CONFIG_VALUE}
+      setConfluenceConfigurationProperty "${!VAR_CONFLUENCE_CONFIG_PROPERTY}" "${!VAR_CONFLUENCE_CONFIG_VALUE}"
     done
   fi
 }
