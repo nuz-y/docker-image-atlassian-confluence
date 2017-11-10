@@ -62,7 +62,7 @@ RUN export CONTAINER_USER=confluence                &&  \
       https://jdbc.postgresql.org/download/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar                          && \
     chown -R confluence:confluence ${CONF_INSTALL} && \
     # Adding letsencrypt-ca to truststore
-    export KEYSTORE=$JAVA_HOME/lib/security/cacerts && \
+    export KEYSTORE=$JRE_HOME/lib/security/cacerts && \
     wget -P /tmp/ https://letsencrypt.org/certs/letsencryptauthorityx1.der && \
     wget -P /tmp/ https://letsencrypt.org/certs/letsencryptauthorityx2.der && \
     wget -P /tmp/ https://letsencrypt.org/certs/lets-encrypt-x1-cross-signed.der && \
