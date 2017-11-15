@@ -89,7 +89,7 @@ function processConfluenceConfigurationSettings() {
       if [ -z "${!VAR_CONFLUENCE_CONFIG_PROPERTY}" ]; then
         break
       fi
-      setConfluenceConfigurationProperty ${!VAR_CONFLUENCE_CONFIG_PROPERTY} ${!VAR_CONFLUENCE_CONFIG_VALUE}
+      setConfluenceConfigurationProperty "${!VAR_CONFLUENCE_CONFIG_PROPERTY}" "${!VAR_CONFLUENCE_CONFIG_VALUE}"
     done
   fi
 }
@@ -184,7 +184,7 @@ fi
 /usr/local/bin/custom_scripts.sh
 
 if [ "$1" = 'confluence' ]; then
-  source /usr/bin/dockerwait
+  /usr/local/bin/wait-for-it -h ${CONFLUENCE_DB_HOST} -p ${CONFLUENCE_DB_PORT}
   exec ${CONF_INSTALL}/bin/start-confluence.sh -fg
 else
   exec "$@"

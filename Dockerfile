@@ -10,11 +10,13 @@ ARG LANG_COUNTRY=US
 # Setup useful environment variables
 ENV CONF_HOME=/var/atlassian/confluence \
     CONF_INSTALL=/opt/atlassian/confluence \
+    CONFLUENCE_DB_HOST=db \
+    CONFLUENCE_DB_PORT=3306 \
     MYSQL_DRIVER_VERSION=5.1.44 \
     POSTGRESQL_DRIVER_VERSION=9.4.1212
 
 COPY bin/custom_scripts.sh /usr/local/bin/custom_scripts.sh
-
+COPY bin/wait-for-it.sh /usr/local/bin/wait-for-it
 # Install Atlassian Confluence
 RUN export CONTAINER_USER=confluence                &&  \
     export CONTAINER_GROUP=confluence               &&  \
@@ -90,12 +92,14 @@ RUN export CONTAINER_USER=confluence                &&  \
     rm -rf /tmp/*                                   &&  \
     rm -rf /var/log/* && \
     mkdir -p /docker-entrypoint.d && \
-    chmod +x /usr/local/bin/custom_scripts.sh
+    chmod +x /usr/local/bin/custom_scripts.sh && \
+    chmod +x /usr/local/bin/wait-for-it
 
 # Expose default HTTP connector port.
 EXPOSE 8090 8091
 
 USER confluence
+COPY confluence.cfg.xml.tpl ${CONF_HOME}/confluence.cfg.xml
 VOLUME ["/var/atlassian/confluence"]
 # Set the default working directory as the Confluence home directory.
 WORKDIR ${CONF_HOME}
