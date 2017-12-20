@@ -1,6 +1,6 @@
 FROM eugenmayer/java:server-jre8
 
-ARG CONFLUENCE_VERSION=6.5.1
+ARG CONFLUENCE_VERSION=6.6.0
 # permissions
 ARG CONTAINER_UID=1000
 ARG CONTAINER_GID=1000
@@ -98,8 +98,11 @@ RUN export CONTAINER_USER=confluence                &&  \
 # Expose default HTTP connector port.
 EXPOSE 8090 8091
 
-USER confluence
 COPY confluence.cfg.xml.tpl ${CONF_HOME}/confluence.cfg.xml
+RUN chown confluence:confluence ${CONF_HOME}/confluence.cfg.xml
+
+USER confluence
+
 VOLUME ["/var/atlassian/confluence"]
 # Set the default working directory as the Confluence home directory.
 WORKDIR ${CONF_HOME}
