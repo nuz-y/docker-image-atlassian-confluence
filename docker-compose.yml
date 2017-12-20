@@ -25,6 +25,7 @@ services:
       - CONFLUENCE_DELAYED_START=
       # those are preconfigurations so that we do not need to set our DB creds when installing - you can also
       # no use that and do it manually during the interactive installation
+      # TODO: eventhough it lands in the configuration it seems to not really picked up by confluence during the installation
       - CONFLUENCE_CONFIG_PROPERTY1=hibernate.connection.driver_class
       - CONFLUENCE_CONFIG_VALUE1=org.postgresql.Driver
       - CONFLUENCE_CONFIG_PROPERTY2=hibernate.connection.password
