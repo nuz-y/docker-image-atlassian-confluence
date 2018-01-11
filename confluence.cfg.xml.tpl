@@ -2,7 +2,7 @@
 
 <confluence-configuration>
   <setupStep>setupstart</setupStep>
-  <setupType>inital</setupType>
+  <setupType>initial</setupType>
   <buildNumber>0</buildNumber>
   <properties>
 
