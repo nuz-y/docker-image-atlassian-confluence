@@ -16,6 +16,8 @@
 You may also like:
 
 * [jira](https://github.com/EugenMayer/docker-image-atlassian-jira)
+* [corresponding rancher catalog for jira](https://github.com/EugenMayer/docker-rancher-extra-catalogs/tree/master/templates/confluence)
+* [running this image for development with debugging](https://github.com/EugenMayer/docker-image-atlassian-confluence/tree/master/examples/debug)
 
 # Make It Short
 
