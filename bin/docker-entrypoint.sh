@@ -184,7 +184,7 @@ fi
 /usr/local/bin/custom_scripts.sh
 
 if [ "$1" = 'confluence' ]; then
-  /usr/local/bin/wait-for-it -h ${CONFLUENCE_DB_HOST} -p ${CONFLUENCE_DB_PORT}
+  /usr/local/bin/wait-for-it --timeout=30 -h ${CONFLUENCE_DB_HOST} -p ${CONFLUENCE_DB_PORT}
   exec ${CONF_INSTALL}/bin/start-confluence.sh -fg
 else
   exec "$@"
