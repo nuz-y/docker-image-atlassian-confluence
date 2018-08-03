@@ -25,6 +25,16 @@ You may also like:
 ~~~~
 docker-compose up
 ~~~~
+## Installation tips with mysql
+
+```
+dc exec mysql
+mysql -pverybigsecretrootpassword -e 'drop database confluencedb;'
+mysql -pverybigsecretrootpassword -e 'CREATE DATABASE confluencedb CHARACTER SET utf8 COLLATE utf8_bin;'
+
+```
+
+then use this as connection string `jdbc:mysql://mysql/confluencedb?sessionVariables=tx_isolation='READ-COMMITTED'` and `confluencedb` as user, `jellyfish` as password
 
 # Setup
 
