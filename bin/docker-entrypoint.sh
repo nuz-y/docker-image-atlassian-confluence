@@ -40,6 +40,10 @@ function processConfluenceProxySettings() {
 
   if [ -n "${CONFLUENCE_PROXY_SCHEME}" ]; then
     xmlstarlet ed -P -S -L --insert "//Connector[not(@scheme)]" --type attr -n scheme --value "${CONFLUENCE_PROXY_SCHEME}" ${CONF_INSTALL}/conf/server.xml
+    
+    if [ "${CONFLUENCE_PROXY_SCHEME}" == "https" ]; then
+      xmlstarlet ed -P -S -L --insert "//Connector[not(@scheme)]" --type attr -n secure --value "true" ${CONF_INSTALL}/conf/server.xml
+    fi
   fi
 }
 
