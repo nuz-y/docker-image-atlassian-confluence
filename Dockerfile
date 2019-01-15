@@ -48,8 +48,9 @@ RUN export CONTAINER_USER=confluence                &&  \
     mkdir -p ${CONF_HOME} \    
     && chown -R confluence:confluence ${CONF_HOME} \
     && mkdir -p ${CONF_INSTALL}/conf \
-    && wget -O /tmp/atlassian-confluence-${CONFLUENCE_VERSION}.tar.gz http://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-${CONFLUENCE_VERSION}.tar.gz && \
-    tar xzf /tmp/atlassian-confluence-${CONFLUENCE_VERSION}.tar.gz --strip-components=1 -C ${CONF_INSTALL} && \
+    && export CONFLUENCE_BIN=atlassian-confluence-${CONFLUENCE_VERSION}.tar.gz && \    
+    && wget -O $CONFLUENCE_BIN https://www.atlassian.com/software/confluence/downloads/binary/${CONFLUENCE_BIN} && \
+    tar xzf $CONFLUENCE_BIN --strip-components=1 -C ${CONF_INSTALL} && \
     echo "confluence.home=${CONF_HOME}" > ${CONF_INSTALL}/confluence/WEB-INF/classes/confluence-init.properties && \
     # Install database drivers
     rm -f                                               \
