@@ -17,7 +17,7 @@ services:
       - '8091:8091'
     environment:
       - CONFLUENCE_DB_HOST=db
-      - CONFLUENCE_DB_PORT=5432
+      - CONFLUENCE_DB_PORT=3306
       - CATALINA_OPTS=-Xms256m -Xmx1g
       - CONFLUENCE_PROXY_NAME=
       - CONFLUENCE_PROXY_PORT=
@@ -51,7 +51,7 @@ services:
 #      - POSTGRES_COLLATE=C
 #      - POSTGRES_COLLATE_TYPE=C
   mysql:
-    image: mysql:5.6
+    image: mysql:5.7
     environment:
       - 'MYSQL_ROOT_PASSWORD=verybigsecretrootpassword'
       - 'MYSQL_DATABASE=confluencedb'
