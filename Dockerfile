@@ -48,9 +48,9 @@ RUN export CONTAINER_USER=confluence \
     && chown -R confluence:confluence ${CONF_HOME} \
     && mkdir -p ${CONF_INSTALL}/conf \
     && export CONFLUENCE_BIN=atlassian-confluence-${CONFLUENCE_VERSION}.tar.gz \    
-    && wget -O $CONFLUENCE_BIN https://www.atlassian.com/software/confluence/downloads/binary/${CONFLUENCE_BIN}  \
+    && wget -O $CONFLUENCE_BIN https://www.atlassian.com/software/confluence/downloads/binary/${CONFLUENCE_BIN} \
     && tar xzf $CONFLUENCE_BIN --strip-components=1 -C ${CONF_INSTALL} \
-    && echo "confluence.home=${CONF_HOME}" > ${CONF_INSTALL}/confluence/WEB-INF/classes/confluence-init.properties  \
+    && echo "confluence.home=${CONF_HOME}" > ${CONF_INSTALL}/confluence/WEB-INF/classes/confluence-init.properties \
     # Install database drivers
     && rm -f ${CONF_INSTALL}/lib/mysql-connector-java*.jar \
     && wget -O /tmp/mysql-connector-java-${MYSQL_DRIVER_VERSION}.tar.gz http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${MYSQL_DRIVER_VERSION}.tar.gz \
@@ -60,7 +60,7 @@ RUN export CONTAINER_USER=confluence \
     && wget -O ${CONF_INSTALL}/lib/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar https://jdbc.postgresql.org/download/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar \
     && chown -R confluence:confluence ${CONF_INSTALL} \
     # Adding letsencrypt-ca to truststore
-    && export KEYSTORE=$JRE_HOME/lib/security/cacerts  \
+    && export KEYSTORE=$JRE_HOME/lib/security/cacerts \
     # Install atlassian ssl tool
     && wget -O /home/${CONTAINER_USER}/SSLPoke.class https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class \
     && chown -R confluence:confluence /home/${CONTAINER_USER} \
