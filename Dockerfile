@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11-openj9:debian
+FROM adoptopenjdk/openjdk11:debian
 
 ARG CONFLUENCE_VERSION=7.1.0
 # permissions
@@ -22,7 +22,7 @@ RUN echo "deb http://deb.debian.org/debian buster contrib" > /etc/apt/sources.li
 RUN export CONTAINER_USER=confluence \
     && export CONTAINER_GROUP=confluence \
     && addgroup --gid $CONTAINER_GID $CONTAINER_GROUP \
-    && adduser -u $CONTAINER_UID \
+    && adduser --uid $CONTAINER_UID \
             --gid $CONTAINER_GID \
             --home /home/$CONTAINER_USER \
             --shell /bin/bash \
