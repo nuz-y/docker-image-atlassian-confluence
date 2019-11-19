@@ -39,7 +39,7 @@ services:
       #- CONFLUENCE_CONFIG_PROPERTY1=confluence.setup.server.id
       #- CONFLUENCE_CONFIG_VALUE1=BDYQ-V8CF-XUYW-DIWK
 #  postgresql:
-#    image: blacklabelops/postgres
+#    image: postgres
 #    container_name: postgres
 #    volumes:
 #      - postgresqldata:/var/lib/postgresql/data

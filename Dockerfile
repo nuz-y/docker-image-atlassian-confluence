@@ -42,6 +42,7 @@ RUN export CONTAINER_USER=confluence \
       xmlstarlet \
       bash \
       wget \
+      tini \
     && fc-cache -f \
     && locale-gen \
     && mkdir -p ${CONF_HOME} \    
@@ -65,9 +66,6 @@ RUN export CONTAINER_USER=confluence \
     && wget -O /home/${CONTAINER_USER}/SSLPoke.class https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class \
     && chown -R confluence:confluence /home/${CONTAINER_USER} \
     # Install Tini Zombie Reaper And Signal Forwarder
-    && export TINI_VERSION=0.18.0 \
-    && curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static -o /bin/tini \
-    && chmod +x /bin/tini \
     && mkdir -p /docker-entrypoint.d \
     && chmod +x /usr/local/bin/custom_scripts.sh \
     && chmod +x /usr/local/bin/wait-for-it \
@@ -94,5 +92,5 @@ VOLUME ["/var/atlassian/confluence"]
 WORKDIR ${CONF_HOME}
 COPY bin/docker-entrypoint.sh /home/confluence/docker-entrypoint.sh
 
-ENTRYPOINT ["/bin/tini","--","/home/confluence/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini","--","/home/confluence/docker-entrypoint.sh"]
 CMD ["confluence"]
