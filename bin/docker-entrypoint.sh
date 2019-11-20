@@ -113,7 +113,7 @@ CATALINA_OPTS="-XX:GCLogFileSize=2M ${CATALINA_OPTS}"
 CATALINA_OPTS="-XX:G1ReservePercent=20 ${CATALINA_OPTS}"
 CATALINA_OPTS="-Djava.awt.headless=true ${CATALINA_OPTS}"
 CATALINA_OPTS="-Datlassian.plugins.enable.wait=300 ${CATALINA_OPTS}"
-CATALINA_OPTS="-Xms1024m ${CATALINA_OPTS}"
+CATALINA_OPTS="-Xms1024m ${CATALINA`_OPTS}"
 CATALINA_OPTS="-Xmx1024m ${CATALINA_OPTS}"
 CATALINA_OPTS="-XX:+UseG1GC ${CATALINA_OPTS}"
 CATALINA_OPTS="${START_CONFLUENCE_JAVA_OPTS} ${CATALINA_OPTS}"
@@ -185,10 +185,12 @@ if [ -n "${CONFLUENCE_LOGFILE_LOCATION}" ]; then
   relayConfluenceLogFiles
 fi
 
+echo "waiting for database before running the custom scripts"
+/usr/local/bin/wait-for-it --timeout=120 -h ${CONFLUENCE_DB_HOST} -p ${CONFLUENCE_DB_PORT}
+
 /usr/local/bin/custom_scripts.sh
 
 if [ "$1" = 'confluence' ]; then
-  /usr/local/bin/wait-for-it --timeout=30 -h ${CONFLUENCE_DB_HOST} -p ${CONFLUENCE_DB_PORT}
   exec ${CONF_INSTALL}/bin/start-confluence.sh -fg
 else
   exec "$@"
