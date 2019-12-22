@@ -10,8 +10,8 @@ ENV CONF_HOME=/var/atlassian/confluence \
     CONF_INSTALL=/opt/atlassian/confluence \
     CONFLUENCE_DB_HOST=db \
     CONFLUENCE_DB_PORT=3306 \
-    MYSQL_DRIVER_VERSION=5.1.48 \
-    POSTGRESQL_DRIVER_VERSION=9.4.1212
+    MYSQL_DRIVER_VERSION=8.0.18 \
+    POSTGRESQL_DRIVER_VERSION=42.2.8
 
 COPY bin/custom_scripts.sh /usr/local/bin/custom_scripts.sh
 COPY bin/wait-for-it.sh /usr/local/bin/wait-for-it
@@ -56,7 +56,7 @@ RUN export CONTAINER_USER=confluence \
     && rm -f ${CONF_INSTALL}/lib/mysql-connector-java*.jar \
     && wget -O /tmp/mysql-connector-java-${MYSQL_DRIVER_VERSION}.tar.gz http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${MYSQL_DRIVER_VERSION}.tar.gz \
     && tar xzf /tmp/mysql-connector-java-${MYSQL_DRIVER_VERSION}.tar.gz -C /tmp \
-    && cp /tmp/mysql-connector-java-${MYSQL_DRIVER_VERSION}/mysql-connector-java-${MYSQL_DRIVER_VERSION}-bin.jar ${CONF_INSTALL}/lib/mysql-connector-java-${MYSQL_DRIVER_VERSION}-bin.jar \
+    && cp /tmp/mysql-connector-java-${MYSQL_DRIVER_VERSION}/mysql-connector-java-${MYSQL_DRIVER_VERSION}.jar ${CONF_INSTALL}/lib/mysql-connector-java-${MYSQL_DRIVER_VERSION}.jar \
     && rm -f ${CONF_INSTALL}/lib/postgresql-*.jar \
     && wget -O ${CONF_INSTALL}/lib/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar https://jdbc.postgresql.org/download/postgresql-${POSTGRESQL_DRIVER_VERSION}.jar \
     && chown -R confluence:confluence ${CONF_INSTALL} \
