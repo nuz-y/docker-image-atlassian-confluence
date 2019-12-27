@@ -9,9 +9,10 @@ ARG CONTAINER_GID=1000
 ENV CONF_HOME=/var/atlassian/confluence \
     CONF_INSTALL=/opt/atlassian/confluence \
     CONFLUENCE_DB_HOST=db \
-    CONFLUENCE_DB_PORT=3306 \
-    MYSQL_DRIVER_VERSION=8.0.18 \
+    CONFLUENCE_DB_PORT=5432 \
+    MYSQL_DRIVER_VERSION=5.1.48 \
     POSTGRESQL_DRIVER_VERSION=42.2.8
+
 
 COPY bin/custom_scripts.sh /usr/local/bin/custom_scripts.sh
 COPY bin/wait-for-it.sh /usr/local/bin/wait-for-it
