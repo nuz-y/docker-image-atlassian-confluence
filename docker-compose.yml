@@ -15,7 +15,7 @@ services:
       - '8091:8091'
     environment:
       - CONFLUENCE_DB_HOST=db
-      - CONFLUENCE_DB_PORT=3306
+      - CONFLUENCE_DB_PORT=5432
       - CATALINA_OPTS=-Xms256m -Xmx1g
       - CONFLUENCE_PROXY_NAME=
       - CONFLUENCE_PROXY_PORT=
