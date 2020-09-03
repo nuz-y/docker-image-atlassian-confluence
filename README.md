@@ -35,6 +35,7 @@ docker-compose up
 
 Please see the `docker-compose.yml` for the configuration variables
 
+Also see the folder `examples/` for different examples
 
 # Build The Image
 
@@ -49,3 +50,26 @@ If you want to build a specific release, just replace the version in .env and ag
 ```
 docker-compose build confluence
 ```
+
+# Environment variables
+
+Configures the db host to wait for the DB to come up. Those variables are not used by confluence during the installation
+- CONFLUENCE_DB_HOST=db 
+- CONFLUENCE_DB_PORT=5432
+
+Set the DEBUG port, e.g. for development
+- JPDA_ADDRESS=5005
+- JPDA_TRANSPORT=dt_socket
+
+Configuratoin
+- CATALINA_OPTS=-Xms256m -Xmx1g
+- CONFLUENCE_PROXY_NAME=
+- CONFLUENCE_PROXY_PORT=
+- CONFLUENCE_PROXY_SCHEME=
+- CONFLUENCE_DELAYED_START= # seconds to wait before starting confluence
+
+# Volumes for persistence
+
+You will need to persist 
+  - the confluence data under `/var/atlassian/confluence`
+  - the database folder postgres: `/var/lib/postgresql/data` or mysql: `/var/lib/mysql`

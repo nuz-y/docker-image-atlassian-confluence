@@ -35,7 +35,7 @@ services:
       - CONFLUENCE_CONFIG_PROPERTY4=hibernate.connection.username
       - CONFLUENCE_CONFIG_VALUE4=confluencedb
       #- CONFLUENCE_CONFIG_PROPERTY1=confluence.setup.server.id
-      #- CONFLUENCE_CONFIG_VALUE1=BDYQ-V8CF-XUYW-DIWK
+      #- CONFLUENCE_CONFIG_VALUE1=BDYQ-V8CF-YYYY-XXXX
   db:
     image: postgres:9.6
     container_name: postgres

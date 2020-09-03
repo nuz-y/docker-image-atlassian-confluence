@@ -10,8 +10,6 @@ services:
     environment:
       - CONFLUENCE_DB_HOST=db
       - CONFLUENCE_DB_PORT=5432
-      - JPDA_ADDRESS=5005
-      - JPDA_TRANSPORT=dt_socket
       # during installation you would use the following data
       # db host: db
       # db port: 5432
@@ -19,14 +17,12 @@ services:
       # db password: jellyfish
       # db database: confluencedb
     volumes:
-      # ovr mount confluence default starts script to add our debug parameter
-      - './start-confluence.sh:/opt/atlassian/confluence/bin/start-confluence.sh'
       - confluencedata:/var/atlassian/confluence
   db:
     image: postegres:9.4
     environment:
       - POSTGRES_USER=confluencedb
-      - POSTGRES_PASSWORD=verybigsecretrootpassword
+      - POSTGRES_PASSWORD=jellyfish
       - POSTGRES_DB=confluencedb
       - POSTGRES_INITDB_ARGS=--encoding=UTF8 --lc-collate=en_US.utf8 --lc-ctype=en_US.utf8
     volumes:
