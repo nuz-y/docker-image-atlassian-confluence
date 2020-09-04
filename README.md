@@ -100,12 +100,16 @@ xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'proper
 xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value '${confluenceHome}/attachments' -i '//properties/property[not(@name)]' --type attr --name 'name' --value "attachments.dir" ${CONF_HOME}/confluence.cfg.xml
 ```
 
-Then mount it in your docker-compose file for the confluence server
+So now mount it in your docker-compose file for the confluence server
 
 ```yaml
 volumes:
   - setup.sh:/docker-entrypoint.d/setup.sh
 ```
+
+After starting the stack, just access your confluence instance once `http://localhost` and wait for about 1 minute.
+The confluence database is setup with all the bits and pieces. Then you just select which type of profile ( blank db or example )
+and create your admin account - that's it!
 
 
 # Build The Image
