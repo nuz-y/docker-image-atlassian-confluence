@@ -2,11 +2,14 @@
 
 # Docker images for Atlassian Confluence
 
-Production ready, up to date builds of Atlassian Confluence - right from the original binary download based on
+Production ready AND **development** ready, up to date builds of Atlassian Confluence - right from the original binary download based on
 
   - adoptjdk openjdk 11 (Confluence 7) 
   - adoptjdk openjdk 8 (Confluence 6)
 
+You can run those images for production use ( see `./examples` ) or for developming with auto-setup and debugging.
+
+## Automatic builds
 This project is build by concourse.ci, see [our oss pipelines here](https://github.com/EugenMayer/concourse-our-open-pipelines)
 
 ## Supported tags and respective Dockerfile links
@@ -16,18 +19,9 @@ This project is build by concourse.ci, see [our oss pipelines here](https://gith
 | Confluence 7.x (adopt openjdk java11) | 5.7.x-7.x(latest) | [see tags](https://hub.docker.com/r/eugenmayer/confluence/tags/) | [Dockerfile](https://github.com/EugenMayer/docker-image-atlassian-confluence/blob/master/Dockerfile) |
 | Confluence 6.13.x+ (adopt openjdk java8) | 6.13.x<7.x(latest) | [see tags](https://hub.docker.com/r/eugenmayer/confluence/tags/) | [Dockerfile_java8](https://github.com/EugenMayer/docker-image-atlassian-confluence/blob/master/Dockerfile_java8) |
 
-## Related Images
+# Quickstart
 
-You may also like:
-
-* [jira](https://github.com/EugenMayer/docker-image-atlassian-jira)
-* [bitbucket](https://github.com/EugenMayer/docker-image-atlassian-bitbucket)
-* [rancher catalog - corresponding catalog for confluence](https://github.com/EugenMayer/docker-rancher-extra-catalogs/tree/master/templates/confluence)
-* [development - running this image for development with debugging](https://github.com/EugenMayer/docker-image-atlassian-confluence/tree/master/examples/debug)
-
-# In short
-
-```git
+```bash
 docker-compose up
 ```
 
@@ -35,21 +29,7 @@ docker-compose up
 
 Please see the `docker-compose.yml` for the configuration variables
 
-Also see the folder `examples/` for different examples
-
-# Build The Image
-
-Build image with the curent Confluence release:
-
-```
-docker-compose build confluence
-```
-
-If you want to build a specific release, just replace the version in .env and again run
-
-```
-docker-compose build confluence
-```
+Also see the folder `examples/` for different examples with postgres or mysql
 
 # Environment variables
 
@@ -73,3 +53,80 @@ Configuratoin
 You will need to persist 
   - the confluence data under `/var/atlassian/confluence`
   - the database folder postgres: `/var/lib/postgresql/data` or mysql: `/var/lib/mysql`
+
+# Custom scripts
+
+You can add custom startup scripts to customize your confluence during the startup.
+Let's assume you have a setup.sh in your folder
+
+Your script `setup.sh` might look like this, setting up a confluence as fast as possible with 
+
+ - preconfigured server id
+ - a preset license
+ - pre-configured database settings
+ 
+Moving you as fast as possible to have a blank and working confluence installation. Be sure to replace the
+
+ - <YOUR LICENSE> part and adjust the serverid
+ - adjust your database name, user and password if needed
+
+```bash
+#!/bin/bash
+set -e
+
+# set the confluence installation set to DB select
+xmlstarlet ed --pf --inplace --update "//setupType" --value "custom" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --update "//setupStep" --value "setupdbchoice-start" ${CONF_HOME}/confluence.cfg.xml
+
+# configure our serverID and license
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value "B2DL-7TV3-LFUU-8DDD" -i '//properties/property[not(@name)]' --type attr --name 'name' --value "confluence.setup.server.id" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value "<YOUR LICENSE>" -i '//properties/property[not(@name)]' --type attr --name 'name' --value "atlassian.license.message" ${CONF_HOME}/confluence.cfg.xml
+
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value "postgresql" -i '//properties/property[not(@name)]' --type attr --name 'name' --value "confluence.database.choice" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value "database-type-standard" -i '//properties/property[not(@name)]' --type attr --name 'name' --value "confluence.database.connection.type" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value "org.postgresql.Driver" -i '//properties/property[not(@name)]' --type attr --name 'name' --value "hibernate.connection.driver_class" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value "verybigsecretrootpassword" -i '//properties/property[not(@name)]' --type attr --name 'name' --value "hibernate.connection.password" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value "confluencedb" -i '//properties/property[not(@name)]' --type attr --name 'name' --value "hibernate.connection.username" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value "jdbc:postgresql://db:5432/confluencedb" -i '//properties/property[not(@name)]' --type attr --name 'name' --value "hibernate.connection.url" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value "com.atlassian.confluence.impl.hibernate.dialect.PostgreSQLDialect" -i '//properties/property[not(@name)]' --type attr --name 'name' --value "hibernate.dialect" ${CONF_HOME}/confluence.cfg.xml
+
+# commong settings confluencese expects
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value "" -i '//properties/property[not(@name)]' --type attr --name 'name' --value "confluence.webapp.context.path" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value 'READ_WRITE' -i '//properties/property[not(@name)]' --type attr --name 'name' --value "access.mode" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value '${localHome}/index' -i '//properties/property[not(@name)]' --type attr --name 'name' --value "lucene.index.dir" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value "true" -i '//properties/property[not(@name)]' --type attr --name 'name' --value "synchrony.encryption.disabled" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value "true" -i '//properties/property[not(@name)]' --type attr --name 'name' --value "synchrony.proxy.enabled" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value '${localHome}/temp' -i '//properties/property[not(@name)]' --type attr --name 'name' --value "webwork.multipart.saveDir" ${CONF_HOME}/confluence.cfg.xml
+xmlstarlet ed --pf --inplace --subnode '//properties' --type elem --name 'property' --value '${confluenceHome}/attachments' -i '//properties/property[not(@name)]' --type attr --name 'name' --value "attachments.dir" ${CONF_HOME}/confluence.cfg.xml
+```
+
+Then mount it in your docker-compose file for the confluence server
+
+```yaml
+volumes:
+  - setup.sh:/docker-entrypoint.d/setup.sh
+```
+
+
+# Build The Image
+
+Build image with the current Confluence release:
+
+```
+# for all 7.x based confluence releases
+docker build . -t confluence:7.2.3 --build-args CONFLUENCE_VERSION=7.2.3
+
+# for all 6.x based confluence releases
+docker build -f Dockerfile_java8 . -t confluence:6.13.15 --build-args CONFLUENCE_VERSION=6.13.15
+```
+
+## Related Images
+
+You may also like:
+
+* [jira](https://github.com/EugenMayer/docker-image-atlassian-jira)
+* [bitbucket](https://github.com/EugenMayer/docker-image-atlassian-bitbucket)
+* [rancher catalog - corresponding catalog for confluence](https://github.com/EugenMayer/docker-rancher-extra-catalogs/tree/master/templates/confluence)
+* [development - running this image for development with debugging](https://github.com/EugenMayer/docker-image-atlassian-confluence/tree/master/examples/debug)
+
+
