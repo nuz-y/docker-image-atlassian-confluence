@@ -43,6 +43,7 @@ Set the DEBUG port, e.g. for development
 
 Configuratoin
 - CATALINA_OPTS=-Xms256m -Xmx1g
+- CONFLUENCE_CONTEXT_PATH= # context path like `/confluence`
 - CONFLUENCE_PROXY_NAME=
 - CONFLUENCE_PROXY_PORT=
 - CONFLUENCE_PROXY_SCHEME=
