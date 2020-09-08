@@ -39,7 +39,7 @@ RUN export CONTAINER_USER=confluence \
       xmlstarlet \
       bash \
       wget \
-      tini
+      tini \
       postgresql-client \
     && fc-cache -f \
     && locale-gen \

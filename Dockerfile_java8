@@ -41,6 +41,7 @@ RUN export CONTAINER_USER=confluence \
       wget \
       tini \
       locales \
+      postgresql-client \
     && fc-cache -f \
     && locale-gen \
     && mkdir -p ${CONF_HOME} \    
