@@ -41,7 +41,7 @@ Set the DEBUG port, e.g. for development
 - JPDA_ADDRESS=5005
 - JPDA_TRANSPORT=dt_socket
 
-Configuratoin
+Configuration
 - CATALINA_OPTS=-Xms256m -Xmx1g
 - CONFLUENCE_CONTEXT_PATH= # context path like `/confluence`
 - CONFLUENCE_PROXY_NAME=
