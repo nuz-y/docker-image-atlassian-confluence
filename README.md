@@ -115,15 +115,19 @@ and create your admin account - that's it!
 
 # Build The Image
 
-Build image with the current Confluence release:
+    git clone https://github.com/EugenMayer/docker-image-atlassian-confluence
+    cd docker-image-atlassian-confluence
+    
+For any version of Confluence >= 7.0.0
 
-```
-# for all 7.x based confluence releases
-docker build . -t confluence:7.2.3 --build-args CONFLUENCE_VERSION=7.2.3
+    export VERSION=7.1.2
+    docker build . -t eugenmayer/confluence:# $VERSION --build-args CONFLUENCE_VERSION=$VERSION
 
-# for all 6.x based confluence releases
-docker build -f Dockerfile_java8 . -t confluence:6.13.15 --build-args CONFLUENCE_VERSION=6.13.15
-```
+For any version of Confluence <= 7.0.0, we neeed Java 8
+
+    export VERSION=6.17.1
+    docker build . -f Dockerfile_java8 -t eugenmayer/confluence:# $VERSION --build-args CONFLUENCE_VERSION=$VERSION
+
 
 ## Related Images
 
